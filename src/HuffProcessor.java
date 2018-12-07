@@ -191,6 +191,7 @@ public class HuffProcessor {
 				else{
 					current = current.myRight;
 				}
+				System.out.println(current + " son");
 				if(current.myLeft ==null && current.myRight==null){
 					if(current.myValue == PSEUDO_EOF){
 						break;
