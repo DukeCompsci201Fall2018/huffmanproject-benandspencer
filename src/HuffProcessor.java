@@ -170,6 +170,7 @@ public class HuffProcessor {
 
 	private void readCompressedBits(HuffNode root, BitInputStream in, BitOutputStream out){
 		if(root == null){
+			System.out.println("FUC");
 			try {
 		throw new Exception("doesn't work");
 		}
