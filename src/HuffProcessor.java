@@ -154,7 +154,7 @@ public class HuffProcessor {
 	}
 
 	private HuffNode readTreeHeader(BitInputStream in){
-		int bit = in.readBits(BITS_PER_INT);
+		int bit = in.readBits(1);
 		if(bit == -1){
 			throw new HuffException("Illegal bit" + bit);
 		}
