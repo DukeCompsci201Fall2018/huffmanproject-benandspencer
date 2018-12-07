@@ -150,7 +150,6 @@ public class HuffProcessor {
 			if (val == -1) break;
 			out.writeBits(BITS_PER_WORD, val);
 		}
-		out.close();
 	}
 
 	private HuffNode readTreeHeader(BitInputStream in){
@@ -169,16 +168,7 @@ public class HuffProcessor {
 	}
 
 	private void readCompressedBits(HuffNode root, BitInputStream in, BitOutputStream out){
-		if(root == null){
-			System.out.println("FUC");
-			try {
-		throw new Exception("doesn't work");
-		}
-		catch (Exception e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-		}
-		}
+
 		HuffNode current = root;
 		while(true){
 			int bits = in.readBits(1);
