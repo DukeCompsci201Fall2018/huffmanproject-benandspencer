@@ -169,6 +169,15 @@ public class HuffProcessor {
 	}
 
 	private void readCompressedBits(HuffNode root, BitInputStream in, BitOutputStream out){
+		if(root == null){
+			try {
+		throw new Exception("doesn't work");
+		}
+		catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+		}
+		}
 		HuffNode current = root;
 		while(true){
 			int bits = in.readBits(1);
