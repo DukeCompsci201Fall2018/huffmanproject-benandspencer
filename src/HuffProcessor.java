@@ -53,21 +53,20 @@ public class HuffProcessor {
 	}
 
 	private void writeHeader(HuffNode root, BitOutputStream out){
-		HuffNode current= root;
-		if(current.myLeft!= null||current.myRight!= null){
+		if(root.myLeft!= null||root.myRight!= null){
 			out.writeBits(1, 0);
-			if(current.myRight!= null){
-				writeHeader(current.myRight, out);
+			if(root.myRight!= null){
+				writeHeader(root.myRight, out);
 			} 
-			if(current.myLeft!= null){
-				writeHeader(current.myLeft, out);
+			if(root.myLeft!= null){
+				writeHeader(root.myLeft, out);
 			}
 		}else{
 			out.writeBits(1, 1);
-			out.writeBits(BITS_PER_WORD +1, current.myValue);
+			out.writeBits(BITS_PER_WORD +1, root.myValue);
 		}
 	}
-	
+
 	private void writeCompressedBits(String[] codings, BitInputStream in, BitOutputStream out){
 		while(true){
 			int bit = in.readBits(BITS_PER_WORD);
@@ -83,12 +82,12 @@ public class HuffProcessor {
 
 	private int[] readForCounts(BitInputStream in){
 		int[] arr = new int[ALPH_SIZE +1];
+		arr[PSEUDO_EOF] = 1;
 		while(true){
 			int bits = in.readBits(BITS_PER_WORD);
 			if(bits == -1) break;
 			arr[bits]+=1;
 		}
-		arr[PSEUDO_EOF] = 1;
 		return arr;
 	}
 
@@ -99,6 +98,7 @@ public class HuffProcessor {
 	}
 
 	private void codingHelper(HuffNode root, String path, String[] enc){
+		if(root == null) return;
 		if(root.myLeft== null & root.myRight == null){
 			enc[root.myValue] = path;
 			return;
@@ -148,7 +148,7 @@ public class HuffProcessor {
 	}
 
 	private HuffNode readTreeHeader(BitInputStream in){
-		int bit = in.readBits(BITS_PER_INT);
+		int bit = in.readBits(1);
 		if(bit == -1){
 			throw new HuffException("Illegal bit" + bit);
 		}
@@ -178,7 +178,6 @@ public class HuffProcessor {
 				else{
 					current = current.myRight;
 				}
-				System.out.println(current + " son");
 				if(current.myLeft ==null && current.myRight==null){
 					if(current.myValue == PSEUDO_EOF){
 						break;
