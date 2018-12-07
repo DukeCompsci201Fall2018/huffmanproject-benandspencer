@@ -84,8 +84,7 @@ public class HuffProcessor {
 		int[] arr = new int[ALPH_SIZE +1];
 		arr[PSEUDO_EOF] = 1;
 		int bits = in.readBits(BITS_PER_WORD);
-		while(true){
-			if(bits == -1) break;
+		while(bits!= -1){
 			arr[bits]+=1;
 		}
 		return arr;
