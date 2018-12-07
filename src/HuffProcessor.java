@@ -83,8 +83,8 @@ public class HuffProcessor {
 	private int[] readForCounts(BitInputStream in){
 		int[] arr = new int[ALPH_SIZE +1];
 		arr[PSEUDO_EOF] = 1;
+		int bits = in.readBits(BITS_PER_WORD);
 		while(true){
-			int bits = in.readBits(BITS_PER_WORD);
 			if(bits == -1) break;
 			arr[bits]+=1;
 		}
@@ -98,7 +98,6 @@ public class HuffProcessor {
 	}
 
 	private void codingHelper(HuffNode root, String path, String[] enc){
-		if(root == null) return;
 		if(root.myLeft== null & root.myRight == null){
 			enc[root.myValue] = path;
 			return;
