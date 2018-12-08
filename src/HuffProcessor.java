@@ -102,7 +102,10 @@ public class HuffProcessor {
 	}
 
 	private void codingHelper(HuffNode root, String path, String[] enc){
-		if(root.myLeft== null & root.myRight == null){
+		if(root == null){
+			return;
+		}
+		if(root.myLeft== null && root.myRight == null){
 			enc[root.myValue] = path;
 			return;
 		}
