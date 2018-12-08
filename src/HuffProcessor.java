@@ -9,6 +9,8 @@ import java.util.PriorityQueue;
  * and including debug and bits read/written information
  * 
  * @author Owen Astrachan
+ * 
+ * Spencer Rosen - sjr63 and Ben Litvin bdl32
  */
 
 public class HuffProcessor {
@@ -42,16 +44,22 @@ public class HuffProcessor {
 	 *            Buffered bit stream writing to the output file.
 	 */
 	public void compress(BitInputStream in, BitOutputStream out){
-		int[] counts = readForCounts(in);
+		int[] counts = readForCounts(in); 
 		HuffNode root = makeTreeFromCounts(counts);
-		String[] codings = makeCodingsFromTree(root);
-		out.writeBits(BITS_PER_INT, HUFF_TREE);
+		String[] codings = makeCodingsFromTree(root); 
+		out.writeBits(BITS_PER_INT, HUFF_TREE); 
 		writeHeader(root,out);
 		in.reset();
 		writeCompressedBits(codings,in,out);
 		out.close();
 	}
 
+	/**Writes the tree used to decode the huffman compression using a preorder traversal
+	 * 
+	 * @param root - the root of the tree with the Huffman key
+	 * 
+	 * @param out - the BitStream written to, the output file
+	 */
 	private void writeHeader(HuffNode root, BitOutputStream out){
 		if(root == null) return;
 		if(root.myLeft== null&&root.myRight== null){
@@ -65,6 +73,15 @@ public class HuffProcessor {
 		writeHeader(root.myRight, out);
 	}
 
+	
+	/**Using the key already established writing the new bit sequences into the output file
+	 * 
+	 * @param codings - an array of Strings with the codings for all the bit sequences 
+	 * 
+	 * @param in - Buffered bit stream of the file to be compressed.
+	 * 
+	 * @param out -  Buffered bit stream writing to the output file.
+	 */
 	private void writeCompressedBits(String[] codings, BitInputStream in, BitOutputStream out){
 		while(true){
 			int bit = in.readBits(BITS_PER_WORD);
@@ -79,6 +96,13 @@ public class HuffProcessor {
 		out.writeBits(code.length(), Integer.parseInt(code,2));
 	}
 
+	
+	/**Reads the file for a count of how many of each character there are.
+	 * 
+	 * 
+	 * @param in - Buffered bit stream of the file to be compressed.
+	 * 
+	 */
 	private int[] readForCounts(BitInputStream in){
 		int[] arr = new int[ALPH_SIZE +1];
 		while(true){
@@ -93,12 +117,25 @@ public class HuffProcessor {
 		return arr;
 	}
 
+	/**Calls a recursive helper method to create the codings for each character
+	 * 
+	 * @param root - the root of the tree with the Huffman key
+	 * 
+	 */
 	private String[] makeCodingsFromTree(HuffNode root){
 		String[] encodings = new String[ALPH_SIZE + 1];
 		codingHelper(root, "", encodings);
 		return encodings;
 	}
 
+	/**The helper method that recursively assigns the characters their sequences
+	 * 
+	 * @param root - the root of the tree
+	 * 
+	 * @param path - an empty string that will be assigned the new bit sequence of the character 
+	 * 
+	 * @param enc - the array of Strings where the sequences will be stored
+	 */
 	private void codingHelper(HuffNode root, String path, String[] enc){
 		if(root == null){
 			return;
@@ -115,6 +152,11 @@ public class HuffProcessor {
 		}
 	}
 
+	/**Makes a tree from the counts of the characters in the text file
+	 * 
+	 * @param arr - Array of Integers - the number of times each character is used in the text file
+	 * 
+	 */
 	private HuffNode makeTreeFromCounts(int[] arr){
 		PriorityQueue<HuffNode> pq= new PriorityQueue<>();
 		for(int i = 0; i < arr.length; i++){
@@ -122,14 +164,14 @@ public class HuffProcessor {
 				pq.add(new HuffNode(i, arr[i],null, null));
 			}
 		}
-		while(pq.size()>1){
+		while(pq.size()>1){ //uses the priority queue to make the tree by removing from the queue
 			HuffNode left = pq.remove();
 			HuffNode right = pq.remove();
 			HuffNode make = new HuffNode(0, left.myWeight+ right.myWeight, left, right);
-			pq.add(make);
+			pq.add(make); //adds the new node back to the priority queue
 		}
 
-		HuffNode root = pq.remove();
+		HuffNode root = pq.remove(); //takes the first node, the root from the priority queue
 		return root;
 	}
 
@@ -152,6 +194,11 @@ public class HuffProcessor {
 		out.close();
 	}
 
+	/** Reads the tree necessary to decode the compressed file
+	 * 
+	 * @param in - Buffered bit stream of the file to be compressed.
+	 * 
+	 */
 	private HuffNode readTreeHeader(BitInputStream in){
 		int bit = in.readBits(1);
 		if(bit == -1){
@@ -167,6 +214,14 @@ public class HuffProcessor {
 		}
 	}
 
+	/**Reads the compressed bits and decodes them from the input file to create the final output file 
+	 * 
+	 * @param root - the root of the tree used as the key to decode the compressed file
+	 * 
+	 * @param in - Buffered bit stream of the file to be compressed.
+	 * 
+	 * @param out - Buffered bit stream writing to the output file.
+	 */
 	private void readCompressedBits(HuffNode root, BitInputStream in, BitOutputStream out){
 
 		HuffNode current = root;
@@ -192,7 +247,6 @@ public class HuffProcessor {
 					}
 				}
 			}
-
 		}
 	}
 }
