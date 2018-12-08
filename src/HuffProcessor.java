@@ -108,10 +108,10 @@ public class HuffProcessor {
 			return;
 		}
 		if(root.myLeft!= null){
-			codingHelper(root.myLeft, path = path +"0", enc);
+			codingHelper(root.myLeft, path+"0", enc);
 		}
 		if(root.myRight!= null){
-			codingHelper(root.myRight, path = path + "1", enc);
+			codingHelper(root.myRight, path + "1", enc);
 		}
 	}
 
