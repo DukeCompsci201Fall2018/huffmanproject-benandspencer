@@ -64,8 +64,8 @@ public class HuffProcessor {
 	}
 
 	private void writeCompressedBits(String[] codings, BitInputStream in, BitOutputStream out){
-		int bit = in.readBits(BITS_PER_WORD);
 		while(true){
+			int bit = in.readBits(BITS_PER_WORD);
 			if(bit == -1){
 				break;
 			}else{
@@ -105,12 +105,8 @@ public class HuffProcessor {
 			enc[root.myValue] = path;
 			return;
 		}
-		if(root.myLeft!= null){
 			codingHelper(root.myLeft, path = path +"0", enc);
-		}
-		if(root.myRight!= null){
 			codingHelper(root.myRight, path = path + "1", enc);
-		}
 	}
 
 	private HuffNode makeTreeFromCounts(int[] arr){
