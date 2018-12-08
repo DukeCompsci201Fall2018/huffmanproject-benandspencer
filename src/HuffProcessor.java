@@ -71,14 +71,14 @@ public class HuffProcessor {
 		int bit = in.readBits(BITS_PER_WORD);
 		while(true){
 			if(bit == -1){
-				String code = codings[PSEUDO_EOF];
-				out.writeBits(code.length(), Integer.parseInt(code,2));
 				break;
 			}else{
 				String code = codings[bit];
 				out.writeBits(code.length(), Integer.parseInt(code, 2));
 			}
 		}
+		String code = codings[PSEUDO_EOF];
+		out.writeBits(code.length(), Integer.parseInt(code,2));
 	}
 
 	private int[] readForCounts(BitInputStream in){
