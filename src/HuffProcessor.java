@@ -121,13 +121,14 @@ public class HuffProcessor {
 			if(arr[i]>0){
 				pq.add(new HuffNode(i, arr[i],null, null));
 			}
-			while(pq.size()>1){
-				HuffNode left = pq.remove();
-				HuffNode right = pq.remove();
-				HuffNode make = new HuffNode(0, left.myWeight+ right.myWeight, left, right);
-				pq.add(make);
-			}
 		}
+		while(pq.size()>1){
+			HuffNode left = pq.remove();
+			HuffNode right = pq.remove();
+			HuffNode make = new HuffNode(0, left.myWeight+ right.myWeight, left, right);
+			pq.add(make);
+		}
+
 		HuffNode root = pq.remove();
 		return root;
 	}
