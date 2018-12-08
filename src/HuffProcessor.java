@@ -71,6 +71,7 @@ public class HuffProcessor {
 		int bit = in.readBits(BITS_PER_WORD);
 		while(true){
 			if(bit == -1){
+				System.out.println("BREAKS");
 				String code = codings[PSEUDO_EOF];
 				out.writeBits(code.length(), Integer.parseInt(code,2));
 				break;
